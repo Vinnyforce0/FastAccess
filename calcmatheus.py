@@ -45,9 +45,15 @@ label = tk.Label(root, text="Formas de Pagamento").place(x=col1,y=385)
 listbox = tk.Listbox(root, height=20, width=50, listvariable=PayValor).place(x=10,y=40)
 label = tk.Label(root, text="Lista de Produtos").place(x=110,y=10)
 
+#imagem produto
 imagem = tk.PhotoImage(file="ibagens/batata.gif")
 imagem = imagem.subsample(4,4)
 label = tk.Label(root, image=imagem, width=200, height=100).place(x=580,y=380)
+
+#imagem empresa
+imagemlogo = tk.PhotoImage(file="ibagens/logi.png")
+imagemlogo = imagemlogo.subsample(4,4)
+label = tk.Label(root, image=imagemlogo, width=300, height=200).place(x=10,y=380)
 
 
 
