@@ -25,13 +25,30 @@ def F1(event):
     if(F1foi):
         F1foi = False
         global janela_Item
+        global imagems
+        global codigo
+        global labelitem
+        codigo = tk.StringVar()
         janela_Item = tk.Toplevel(root)
         janela_Item.title("Novo Item")
         janela_Item.geometry("450x300")
         janela_Item.resizable(False,False)
         janela_Item.protocol("WM_DELETE_WINDOW",F1n)
-        imagem = tk.PhotoImage(file="ibagens/batata.gif")
-        labelitem = tk.Label(janela_Item, image=imagem, width=182, height=125, border=1, relief="solid").place(x=20,y=20)
+        imagems = tk.PhotoImage(file="")
+        labelitem = tk.Label(janela_Item, image=imagems, width=182, height=125, border=1, relief="solid")
+        labelitem.place(x=20,y=20)
+        barrascaixa = tk.Entry(janela_Item, textvariable=codigo, width=12, font=("Arial", 20, ""))
+        barrascaixa.place(x=20,y=150)
+        barrascaixa.bind("<Return>", lambda event: F1enter(codigo.get()))
+        tk.Label(janela_Item, border=1, text="Inserir codigo de barras").place(x=20,y=190)
+
+def F1enter(valor):
+    global imagems
+    if valor == "1":
+        imagems = tk.PhotoImage(file="ibagens/batata.gif").subsample(3,3)
+    elif valor == "0":
+        imagems = tk.PhotoImage(file="ibagens/caracol.gif").subsample(3,3)
+    labelitem.config(image=imagems)
 
 
 def F1n():
@@ -88,8 +105,8 @@ label = tk.Label(root, text="Lista de Produtos").place(x=110,y=10)
 
 #imagem produto
 global imagem
-imagem = tk.PhotoImage(file="ibagens/batata.gif")
-imagem = imagem.subsample(4,4)
+imagem = tk.PhotoImage(file="ibagens/caracol.gif")
+imagem = imagem.subsample(3,3)
 label = tk.Label(root, image=imagem, width=182, height=125, border=1, relief="solid").place(x=600,y=370)
 
 #imagem empresa
