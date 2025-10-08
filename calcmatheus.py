@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-from produtos import produtos
 
 root = tk.Tk()
 root.title("Minha Aplicação Tkinter")
@@ -28,7 +27,11 @@ def F1(event):
         global janela_Item
         global imagems
         global codigo
+        global qtde
         global labelitem
+        global labelpreco
+        global barrasqtde
+        qtde = tk.StringVar()
         codigo = tk.StringVar()
         janela_Item = tk.Toplevel(root)
         janela_Item.title("Novo Item")
@@ -38,21 +41,45 @@ def F1(event):
         imagems = tk.PhotoImage(file="")
         labelitem = tk.Label(janela_Item, image=imagems, width=182, height=125, border=1, relief="solid")
         labelitem.place(x=20,y=20)
+        labelpreco = tk.Label(janela_Item, border=1, text="Preço Unitário: ")
+        labelpreco.place(x=220,y=20)
         barrascaixa = tk.Entry(janela_Item, textvariable=codigo, width=12, font=("Arial", 20, ""))
+        barrasqtde = tk.Entry(janela_Item, textvariable=qtde, width=12, font=("Arial", 20, ""))
         barrascaixa.place(x=20,y=150)
+        barrasqtde.place(x=220,y=150)
         barrascaixa.bind("<Return>", lambda event: F1enter(codigo.get()))
         tk.Label(janela_Item, border=1, text="Inserir codigo de barras").place(x=20,y=190)
+        tk.Label(janela_Item, border=1, text="Inserir quantidade").place(x=220,y=190)
+        tk.Button(janela_Item, text="Adicionar Produto", width=40, height=2, command=enviar).place(x=75,y=220)
         barrascaixa.focus()
 
 def F1enter(valor):
-    
+    global valors
+    valors = 0
     global imagems
+    global nome
     if valor == "1":
         imagems = tk.PhotoImage(file="ibagens/batata.gif").subsample(3,3)
+        nome = "batata"
+        valors = 10
     elif valor == "0":
         imagems = tk.PhotoImage(file="ibagens/caracol.gif").subsample(3,3)
+        nome = "caracol"
+        valors = 20
+    labelpreco.config(text=f"Preço Unitário: {valors}")
     labelitem.config(image=imagems)
+    barrasqtde.focus()
 
+def enviar():
+    listbox.insert(tk.END, f"{codigo.get()}  {nome}  {qtde.get()}  {valors}")
+    janela_Item.destroy()
+    
+def selection(event):
+    selec = listbox.curselection()
+    if(selec):
+        peguei = listbox.get(selec)
+        labelbarras.config(text=f"{peguei}")
+    
 
 def F1n():
     global F1foi
@@ -103,14 +130,17 @@ label = tk.Label(root, text="Formas de Pagamento").place(x=col1,y=385)
 
 #o famoso listbox
 global listbox
-listbox = tk.Listbox(root, height=20, width=50, listvariable=PayValor).place(x=10,y=40)
+listbox = tk.Listbox(root, height=20, width=50, listvariable=PayValor)
+listbox.place(x=10,y=40)
+listbox.bind("<Return>", selection)
 label = tk.Label(root, text="Lista de Produtos").place(x=110,y=10)
 
 #imagem produto
 global imagem
 imagem = tk.PhotoImage(file="ibagens/caracol.gif")
 imagem = imagem.subsample(3,3)
-label = tk.Label(root, image=imagem, width=182, height=125, border=1, relief="solid").place(x=600,y=370)
+labelimagem = tk.Label(root, image=imagem, width=182, height=125, border=1, relief="solid")
+labelimagem.place(x=600,y=370)
 
 #imagem empresa
 global imagemlogo
@@ -120,7 +150,9 @@ label = tk.Label(root, image=imagemlogo, width=300, height=200).place(x=10,y=400
 
 #codigo de barras
 label = tk.Label(root, text="Código de rabas").place(x=col1,y=450)
-label = tk.Label(root, text="01100101010010110101011001").place(x=col1,y=480)
+global labelbarras
+labelbarras = tk.Label(root, text="01100101010010110101011001")
+labelbarras.place(x=col1,y=480)
 
 label = tk.Label(root, text="F1 - Novo Item").place(x=col2,y=500)
 label = tk.Label(root, text="F2 - Remover Item").place(x=col2,y=520)
