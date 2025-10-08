@@ -11,6 +11,13 @@ col2 = 600
 col3 = 200
 col4 = 200
 
+global SubValor
+global DesValor
+global ResValor
+global TotalValor
+global TroValor
+global PayValor
+
 SubValor = tk.StringVar()
 DesValor = tk.StringVar()
 ResValor = tk.StringVar()
@@ -58,14 +65,22 @@ def F1enter(valor):
     valors = 0
     global imagems
     global nome
-    if valor == "1":
-        imagems = tk.PhotoImage(file="ibagens/batata.gif").subsample(3,3)
+    if valor == "01":
         nome = "batata"
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.gif").subsample(3,3)
         valors = 10
-    elif valor == "0":
-        imagems = tk.PhotoImage(file="ibagens/caracol.gif").subsample(3,3)
+    elif valor == "00":
         nome = "caracol"
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.gif").subsample(3,3)
         valors = 20
+    elif valor == "10":
+        nome = "arroz"
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.gif").subsample(3,3)
+        valors = 15
+    elif valor == "11":
+        nome = "feijao"
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.gif").subsample(3,3)
+        valors = 13
     labelpreco.config(text=f"Preço Unitário: {valors}")
     labelitem.config(image=imagems)
     barrasqtde.focus()
@@ -73,6 +88,7 @@ def F1enter(valor):
 def enviar(event):
     global F1foi
     listbox.insert(tk.END, f"{codigo.get()} {nome} {qtde.get()} {valors}")
+    AtualizarPreco(event=event)
     F1foi = True
     janela_Item.destroy()
     
@@ -83,35 +99,47 @@ def selection(event):
         nah = peguei.split()
         imagems = tk.PhotoImage(file=f"ibagens/{nah[1]}.gif").subsample(3,3)
         labelimagem.config(image=imagems)
+        labelimagem.image = imagems
         labelbarras.config(text=f"{nah[0]}")
 
 def F1n():
     global F1foi
     F1foi = True
     janela_Item.destroy()
+    
+
 
 F3foi = True
 
-def F3(event):
-    global F3foi
-    if(F3foi):
-       F3foi = False
-       global janela_preco
-       janela_preco = tk.Toplevel(root)
-       janela_preco.title("Consultar preco")
-       janela_preco.geometry("300x150")
-       janela_preco.protocol("WM_DELETE_WINDOW",F3n)
+def F2(event):
+    opa = listbox.curselection()
+    if(opa):
+        listbox.delete(opa)
+        AtualizarPreco(event=event)
 
-def F3n():
-    global F3foi
-    F3foi = True
-    janela_preco.destroy()
+def AtualizarPreco(event):
+    valores = 0
+    i = 0
+    while(i < listbox.size()):
+        selec = str(listbox.get(i))
+        nah = selec.split()
+        valores += int(nah[2]) * int(nah[3])
+        SubValor.set(valores)
+        i+= 1
+    TotalValor.set(int(SubValor.get()) - int(DesValor.get()))
 
-
+global Subcaixa
+global Descaixa
+global Rescaixa
+global Trocaixa
 
 #linha 1
-Subcaixa = tk.Entry(root, textvariable=SubValor, width=12, font=("Arial", 20, ""), state="disabled").place(x=col1,y=(40 + (4.1 * 0)))
-descaixa = tk.Entry(root, textvariable=DesValor, width=12, font=("Arial", 20, ""), state="disabled").place(x=col2,y=(40 + (4.1 * 0)))
+Subcaixa = tk.Entry(root, textvariable=SubValor, width=12, font=("Arial", 20, ""), state="disabled")
+SubValor.set(0)
+descaixa = tk.Entry(root, textvariable=DesValor, width=12, font=("Arial", 20, ""), state="disabled")
+DesValor.set(0)
+Subcaixa.place(x=col1,y=(40 + (4.1 * 0)))
+descaixa.place(x=col2,y=(40 + (4.1 * 0)))
 
 label = tk.Label(root, text="Sub-Total").place(x=col1,y=(40 + (4.1 * 0)) - 25)
 label = tk.Label(root, text="Desconto").place(x=col2,y=(40 + (4.1 * 0)) - 25)
@@ -166,5 +194,7 @@ label = tk.Label(root, text="F5 - Adicionar Produto").place(x=col2,y=580)
 label = tk.Label(root, text="F12 - Nova Compra").place(x=col2,y=600)
 
 root.bind("<F1>", F1)
+root.bind("<F2>", F2)
+root.bind("<F3>", AtualizarPreco)
 
 root.mainloop()
