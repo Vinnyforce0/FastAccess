@@ -48,9 +48,9 @@ def F1(event):
         barrascaixa.place(x=20,y=150)
         barrasqtde.place(x=220,y=150)
         barrascaixa.bind("<Return>", lambda event: F1enter(codigo.get()))
+        barrasqtde.bind("<Return>", enviar)
         tk.Label(janela_Item, border=1, text="Inserir codigo de barras").place(x=20,y=190)
         tk.Label(janela_Item, border=1, text="Inserir quantidade").place(x=220,y=190)
-        tk.Button(janela_Item, text="Adicionar Produto", width=40, height=2, command=enviar).place(x=75,y=220)
         barrascaixa.focus()
 
 def F1enter(valor):
@@ -70,16 +70,20 @@ def F1enter(valor):
     labelitem.config(image=imagems)
     barrasqtde.focus()
 
-def enviar():
-    listbox.insert(tk.END, f"{codigo.get()}  {nome}  {qtde.get()}  {valors}")
+def enviar(event):
+    global F1foi
+    listbox.insert(tk.END, f"{codigo.get()} {nome} {qtde.get()} {valors}")
+    F1foi = True
     janela_Item.destroy()
     
 def selection(event):
     selec = listbox.curselection()
     if(selec):
-        peguei = listbox.get(selec)
-        labelbarras.config(text=f"{peguei}")
-    
+        peguei = str(listbox.get(selec))
+        nah = peguei.split()
+        imagems = tk.PhotoImage(file=f"ibagens/{nah[1]}.gif").subsample(3,3)
+        labelimagem.config(image=imagems)
+        labelbarras.config(text=f"{nah[0]}")
 
 def F1n():
     global F1foi
@@ -137,8 +141,8 @@ label = tk.Label(root, text="Lista de Produtos").place(x=110,y=10)
 
 #imagem produto
 global imagem
-imagem = tk.PhotoImage(file="ibagens/caracol.gif")
-imagem = imagem.subsample(3,3)
+global labelimagem
+imagem = tk.PhotoImage(file="ibagens/caracol.gif").subsample(3,3)
 labelimagem = tk.Label(root, image=imagem, width=182, height=125, border=1, relief="solid")
 labelimagem.place(x=600,y=370)
 
@@ -162,6 +166,5 @@ label = tk.Label(root, text="F5 - Adicionar Produto").place(x=col2,y=580)
 label = tk.Label(root, text="F12 - Nova Compra").place(x=col2,y=600)
 
 root.bind("<F1>", F1)
-
 
 root.mainloop()
