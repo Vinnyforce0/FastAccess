@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from produtos import produtos
 
 root = tk.Tk()
 root.title("Minha Aplicação Tkinter")
@@ -41,8 +42,10 @@ def F1(event):
         barrascaixa.place(x=20,y=150)
         barrascaixa.bind("<Return>", lambda event: F1enter(codigo.get()))
         tk.Label(janela_Item, border=1, text="Inserir codigo de barras").place(x=20,y=190)
+        barrascaixa.focus()
 
 def F1enter(valor):
+    
     global imagems
     if valor == "1":
         imagems = tk.PhotoImage(file="ibagens/batata.gif").subsample(3,3)
