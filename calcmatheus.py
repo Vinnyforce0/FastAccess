@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import PhotoImage, ttk
 
 root = tk.Tk()
 root.title("Minha Aplicação Tkinter")
@@ -38,6 +38,7 @@ def F1(event):
         global labelitem
         global labelpreco
         global barrasqtde
+        global barrascaixa
         qtde = tk.StringVar()
         codigo = tk.StringVar()
         janela_Item = tk.Toplevel(root)
@@ -45,7 +46,7 @@ def F1(event):
         janela_Item.geometry("450x300")
         janela_Item.resizable(False,False)
         janela_Item.protocol("WM_DELETE_WINDOW",F1n)
-        imagems = tk.PhotoImage(file="")
+        imagems = PhotoImage(file="")
         labelitem = tk.Label(janela_Item, image=imagems, width=182, height=125, border=1, relief="solid")
         labelitem.place(x=20,y=20)
         labelpreco = tk.Label(janela_Item, border=1, text="Preço Unitário: ")
@@ -67,37 +68,38 @@ def F1enter(valor):
     global nome
     if valor == "01":
         nome = "batata"
-        imagems = tk.PhotoImage(file=f"ibagens/{nome}.gif").subsample(3,3)
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 10
     elif valor == "00":
-        nome = "caracol"
-        imagems = tk.PhotoImage(file=f"ibagens/{nome}.gif").subsample(3,3)
-        valors = 20
+        nome = "televisao"
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
+        valors = 1050
     elif valor == "10":
         nome = "arroz"
-        imagems = tk.PhotoImage(file=f"ibagens/{nome}.gif").subsample(3,3)
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 15
     elif valor == "11":
         nome = "feijao"
-        imagems = tk.PhotoImage(file=f"ibagens/{nome}.gif").subsample(3,3)
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 13
     labelpreco.config(text=f"Preço Unitário: {valors}")
     labelitem.config(image=imagems)
     barrasqtde.focus()
 
 def enviar(event):
-    global F1foi
-    listbox.insert(tk.END, f"{codigo.get()} {nome} {qtde.get()} {valors}")
-    AtualizarPreco(event=event)
-    F1foi = True
-    janela_Item.destroy()
+    if(str(codigo.get()) != "" and str(qtde.get()) != ""):
+        global F1foi
+        listbox.insert(tk.END, f"{codigo.get()} {nome} {qtde.get()} {valors}")
+        AtualizarPreco(event=event)
+        F1foi = True
+        janela_Item.destroy()
     
 def selection(event):
     selec = listbox.curselection()
     if(selec):
         peguei = str(listbox.get(selec))
         nah = peguei.split()
-        imagems = tk.PhotoImage(file=f"ibagens/{nah[1]}.gif").subsample(3,3)
+        imagems = tk.PhotoImage(file=f"ibagens/{nah[1]}.png").subsample(4,4)
         labelimagem.config(image=imagems)
         labelimagem.image = imagems
         labelbarras.config(text=f"{nah[0]}")
@@ -164,20 +166,20 @@ label = tk.Label(root, text="Formas de Pagamento").place(x=col1,y=385)
 global listbox
 listbox = tk.Listbox(root, height=20, width=50, listvariable=PayValor)
 listbox.place(x=10,y=40)
-listbox.bind("<Return>", selection)
+listbox.bind("<ButtonRelease-1>", selection)
 label = tk.Label(root, text="Lista de Produtos").place(x=110,y=10)
 
 #imagem produto
 global imagem
 global labelimagem
-imagem = tk.PhotoImage(file="ibagens/caracol.gif").subsample(3,3)
+imagem = PhotoImage(file="").subsample(3,3)
 labelimagem = tk.Label(root, image=imagem, width=182, height=125, border=1, relief="solid")
 labelimagem.place(x=600,y=370)
 
 #imagem empresa
 global imagemlogo
 imagemlogo = tk.PhotoImage(file="ibagens/logi.png")
-imagemlogo = imagemlogo.subsample(4,4)
+imagemlogo = imagemlogo.subsample(3,3)
 label = tk.Label(root, image=imagemlogo, width=300, height=200).place(x=10,y=400)
 
 #codigo de barras
