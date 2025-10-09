@@ -19,11 +19,15 @@ global TroValor
 global PayValor
 
 SubValor = tk.StringVar()
+SubValor.set(0.0)
 DesValor = tk.StringVar()
+DesValor.set(0.0)
 ResValor = tk.StringVar()
+ResValor.set(0.0)
 TotalValor = tk.StringVar()
+TotalValor.set(0.0)
 TroValor = tk.StringVar()
-PayValor = tk.StringVar()
+TroValor.set(0.0)
 
 F1foi = True
 
@@ -67,7 +71,7 @@ def F1enter(valor):
     global imagems
     global nome
     if valor == "01":
-        nome = "batata"
+        nome = "batata_kg"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 10
     elif valor == "00":
@@ -75,11 +79,11 @@ def F1enter(valor):
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 1050
     elif valor == "10":
-        nome = "arroz"
+        nome = "arroz_kg"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 15
     elif valor == "11":
-        nome = "feijao"
+        nome = "feijao_kg"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 13
     labelpreco.config(text=f"Preço Unitário: {valors}")
@@ -89,7 +93,7 @@ def F1enter(valor):
 def enviar(event):
     if(str(codigo.get()) != "" and str(qtde.get()) != ""):
         global F1foi
-        listbox.insert(tk.END, f"{codigo.get()} {nome} {qtde.get()} {valors}")
+        listbox.insert(tk.END, f"{codigo.get()}                 {nome}                 {qtde.get()}                 {valors}.00")
         AtualizarPreco(event=event)
         F1foi = True
         janela_Item.destroy()
@@ -98,18 +102,16 @@ def selection(event):
     selec = listbox.curselection()
     if(selec):
         peguei = str(listbox.get(selec))
-        nah = peguei.split()
+        nah = peguei.split("                 ")
         imagems = tk.PhotoImage(file=f"ibagens/{nah[1]}.png").subsample(4,4)
         labelimagem.config(image=imagems)
         labelimagem.image = imagems
-        labelbarras.config(text=f"{nah[0]}")
+        labelbarras.config(text=f"510000{nah[0]}7")
 
 def F1n():
     global F1foi
     F1foi = True
     janela_Item.destroy()
-    
-
 
 F3foi = True
 
@@ -124,11 +126,34 @@ def AtualizarPreco(event):
     i = 0
     while(i < listbox.size()):
         selec = str(listbox.get(i))
-        nah = selec.split()
-        valores += int(nah[2]) * int(nah[3])
+        nah = selec.split("                 ")
+        valores += float(nah[2]) * float(nah[3])
         SubValor.set(valores)
         i+= 1
-    TotalValor.set(int(SubValor.get()) - int(DesValor.get()))
+    if(listbox.size() == 0):
+        SubValor.set("0.00")
+    TotalValor.set(float(SubValor.get()) - float(DesValor.get()))
+
+def CalcularTroco(event):
+    if(ResValor.get() == ""):
+        ResValor.set("0.00")
+    troco = float(TotalValor.get()) - float(ResValor.get())
+    TroValor.set(float(troco * -1))
+    if(TroValor.get() == "-0.0"):
+        TroValor.set("0.0")
+
+def mudapagamento(event):
+    if(combo.get() == "Débito" or combo.get() == "Crédito" or combo.get() == "Pix"):
+        ResValor.set(float(TotalValor.get()))
+    else:
+        ResValor.set("")
+    CalcularTroco(event=event)
+
+def F3(event):
+    janela_Item = tk.Toplevel(root)
+    janela_Item.title("Consultar Produtos")
+    janela_Item.geometry("450x300")
+    janela_Item.resizable(False,False)
 
 global Subcaixa
 global Descaixa
@@ -137,9 +162,8 @@ global Trocaixa
 
 #linha 1
 Subcaixa = tk.Entry(root, textvariable=SubValor, width=12, font=("Arial", 20, ""), state="disabled")
-SubValor.set(0)
 descaixa = tk.Entry(root, textvariable=DesValor, width=12, font=("Arial", 20, ""), state="disabled")
-DesValor.set(0)
+
 Subcaixa.place(x=col1,y=(40 + (4.1 * 0)))
 descaixa.place(x=col2,y=(40 + (4.1 * 0)))
 
@@ -151,20 +175,25 @@ tocaixa = tk.Entry(root, textvariable=TotalValor, width=24, font=("Arial", 25, "
 label = tk.Label(root, text="Total").place(x=col1,y=(40 * (4.1 * 1))- 10)
 
 #linha 3
-Resotao = tk.Entry(root, textvariable=ResValor, width=12, font=("Arial", 20, "")).place(x=col1,y=(40 * (4.1 * 2)))
+Resotao = tk.Entry(root, textvariable=ResValor, width=12, font=("Arial", 20, ""))
+Resotao.place(x=col1,y=(40 * (4.1 * 2)))
+Resotao.bind("<Return>", CalcularTroco)
 Trobotao = tk.Entry(root, textvariable=TroValor, width=12, font=("Arial", 20, ""), state="disabled").place(x=col2,y=(40 * (4.1 * 2)))
 
 label = tk.Label(root, text="Valor Recebido").place(x=col1,y=(40 * (4.1 * 2)) - 25)
 label = tk.Label(root, text="Troco").place(x=col2,y=(40 * (4.1 * 2))- 25)
 
 #linha 4
-opcoes = ["Débito", "Crédito", "Dinheiro", "Voucher", "Cartão Presente", "Pix"]
-combo = ttk.Combobox(root, values=opcoes, width=27).place(x=col1,y=410)
+global opcoes
+opcoes = ["Débito", "Crédito", "Dinheiro", "Voucher", "Pix"]
+combo = ttk.Combobox(root, values=opcoes, width=27, state="readonly")
+combo.place(x=col1,y=410)
+combo.bind("<<ComboboxSelected>>",mudapagamento)
 label = tk.Label(root, text="Formas de Pagamento").place(x=col1,y=385)
 
 #o famoso listbox
 global listbox
-listbox = tk.Listbox(root, height=20, width=50, listvariable=PayValor)
+listbox = tk.Listbox(root, height=20, width=50)
 listbox.place(x=10,y=40)
 listbox.bind("<ButtonRelease-1>", selection)
 label = tk.Label(root, text="Lista de Produtos").place(x=110,y=10)
@@ -192,11 +221,10 @@ label = tk.Label(root, text="F1 - Novo Item").place(x=col2,y=500)
 label = tk.Label(root, text="F2 - Remover Item").place(x=col2,y=520)
 label = tk.Label(root, text="F3 - Consultar Preco").place(x=col2,y=540)
 label = tk.Label(root, text="F4 - Imprimir/Concluir Compra").place(x=col2,y=560)
-label = tk.Label(root, text="F5 - Adicionar Produto").place(x=col2,y=580)
-label = tk.Label(root, text="F12 - Nova Compra").place(x=col2,y=600)
+label = tk.Label(root, text="F12 - Nova Compra").place(x=col2,y=580)
 
 root.bind("<F1>", F1)
 root.bind("<F2>", F2)
-root.bind("<F3>", AtualizarPreco)
+root.bind("<F3>", F3)
 
 root.mainloop()
