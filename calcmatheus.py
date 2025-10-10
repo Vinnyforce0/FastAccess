@@ -140,24 +140,24 @@ def AtualizarPreco(event):
         selec = str(listbox.get(i))
         nah = selec.split("                 ")
         valores += float(nah[2]) * float(nah[3])
-        SubValor.set(valores)
+        SubValor.set(round(valores, 2))
         i+= 1
     if(listbox.size() == 0):
         SubValor.set("0.00")
-    TotalValor.set(float(SubValor.get()) - float(DesValor.get()))
+    TotalValor.set(round(float(SubValor.get()) - float(DesValor.get()), 2))
     mudapagamento(event=event)
 
 def CalcularTroco(event):
     if(ResValor.get() == ""):
         ResValor.set("0.00")
     troco = float(TotalValor.get()) - float(ResValor.get())
-    TroValor.set(float(troco * -1))
+    TroValor.set(round(float(troco * -1), 2))
     if(TroValor.get() == "-0.0"):
         TroValor.set("0.0")
 
 def mudapagamento(event):
     if(combo.get() == "Débito" or combo.get() == "Crédito" or combo.get() == "Pix"):
-        ResValor.set(float(TotalValor.get()))
+        ResValor.set(round(float(TotalValor.get()), 2))
     else:
         ResValor.set("")
     CalcularTroco(event=event)
