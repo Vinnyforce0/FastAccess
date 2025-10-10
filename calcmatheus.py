@@ -70,22 +70,34 @@ def F1enter(valor):
     valors = 0
     global imagems
     global nome
-    if valor == "01":
+    if valor == "001":
         nome = "batata_kg"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
-        valors = 10
-    elif valor == "00":
+        valors = 2.80
+    elif valor == "000":
         nome = "televisao"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
-        valors = 1050
-    elif valor == "10":
+        valors = 2559.90
+    elif valor == "010":
         nome = "arroz_kg"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
-        valors = 15
-    elif valor == "11":
+        valors = 4.90
+    elif valor == "011":
         nome = "feijao_kg"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
-        valors = 13
+        valors = 7.90
+    elif valor == "100":
+        nome = "Coca_Cola_350ML"
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
+        valors = 6.50
+    elif valor == "101":
+        nome = "Panelinhas_Seara"
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
+        valors = 18.90
+    elif valor == "999":
+        nome = "logi"
+        imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
+        valors = 9999999.90
     labelpreco.config(text=f"Preço Unitário: {valors}")
     labelitem.config(image=imagems)
     barrasqtde.focus()
@@ -93,7 +105,7 @@ def F1enter(valor):
 def enviar(event):
     if(str(codigo.get()) != "" and str(qtde.get()) != ""):
         global F1foi
-        listbox.insert(tk.END, f"{codigo.get()}                 {nome}                 {qtde.get()}                 {valors}.00")
+        listbox.insert(tk.END, f"{codigo.get()}                 {nome}                 {qtde.get()}                 {valors}")
         AtualizarPreco(event=event)
         F1foi = True
         janela_Item.destroy()
@@ -133,6 +145,7 @@ def AtualizarPreco(event):
     if(listbox.size() == 0):
         SubValor.set("0.00")
     TotalValor.set(float(SubValor.get()) - float(DesValor.get()))
+    mudapagamento(event=event)
 
 def CalcularTroco(event):
     if(ResValor.get() == ""):
@@ -149,11 +162,48 @@ def mudapagamento(event):
         ResValor.set("")
     CalcularTroco(event=event)
 
+global f3estado
+f3estado = True
+
 def F3(event):
-    janela_Item = tk.Toplevel(root)
-    janela_Item.title("Consultar Produtos")
-    janela_Item.geometry("450x300")
-    janela_Item.resizable(False,False)
+    global f3estado
+    global janela_Item
+    if(f3estado):
+        janela_Item = tk.Toplevel(root)
+        janela_Item.title("Consultar Produtos")
+        janela_Item.geometry("450x300")
+        janela_Item.resizable(False,False)
+        tk.Label(janela_Item, text="Televisão       ").place(x=20,y=20)
+        tk.Label(janela_Item, text="Batata          ").place(x=20,y=40)
+        tk.Label(janela_Item, text="Arroz           ").place(x=20,y=60)
+        tk.Label(janela_Item, text="Feijão          ").place(x=20,y=80)
+        tk.Label(janela_Item, text="Coca_Cola_350ML ").place(x=20,y=100)
+        tk.Label(janela_Item, text="Panelinhas_Seara").place(x=20,y=120)
+        tk.Label(janela_Item, text="codigo: 000").place(x=200,y=20)
+        tk.Label(janela_Item, text="codigo: 001").place(x=200,y=40)
+        tk.Label(janela_Item, text="codigo: 010").place(x=200,y=60)
+        tk.Label(janela_Item, text="codigo: 011").place(x=200,y=80)
+        tk.Label(janela_Item, text="codigo: 100").place(x=200,y=100)
+        tk.Label(janela_Item, text="codigo: 101").place(x=200,y=120)
+        f3estado = not f3estado
+    else:
+        janela_Item.destroy()
+        f3estado = not f3estado
+    
+def F4(event):
+    janela_Result = tk.Toplevel(root)
+    janela_Result.title("Consultar Produtos")
+    janela_Result.geometry("400x100")
+    janela_Result.resizable(False,False)
+    tk.Label(janela_Result, text=f"Valor Total da Compra: {TotalValor.get()}").place(x=30,y=20)
+    tk.Label(janela_Result, text=f"Valor Recebido da Compra: {ResValor.get()}").place(x=20,y=40)
+    tk.Label(janela_Result, text=f"Troco: {TroValor.get()}").place(x=70,y=60)
+    listbox.delete(0, tk.END)
+    AtualizarPreco(event=event)
+
+def F12(event):
+    listbox.delete(0, tk.END)
+    AtualizarPreco(event=event)
 
 global Subcaixa
 global Descaixa
@@ -196,6 +246,8 @@ global listbox
 listbox = tk.Listbox(root, height=20, width=50)
 listbox.place(x=10,y=40)
 listbox.bind("<ButtonRelease-1>", selection)
+listbox.bind("<KeyRelease-Up>", selection)
+listbox.bind("<KeyRelease-Down>", selection)
 label = tk.Label(root, text="Lista de Produtos").place(x=110,y=10)
 
 #imagem produto
@@ -221,10 +273,25 @@ label = tk.Label(root, text="F1 - Novo Item").place(x=col2,y=500)
 label = tk.Label(root, text="F2 - Remover Item").place(x=col2,y=520)
 label = tk.Label(root, text="F3 - Consultar Preco").place(x=col2,y=540)
 label = tk.Label(root, text="F4 - Imprimir/Concluir Compra").place(x=col2,y=560)
+label = tk.Label(root, text="F5 - Alternar Pagamento/Produtos").place(x=col2,y=560)
 label = tk.Label(root, text="F12 - Nova Compra").place(x=col2,y=580)
 
 root.bind("<F1>", F1)
 root.bind("<F2>", F2)
 root.bind("<F3>", F3)
+root.bind("<F4>", F4)
+global aberto
+aberto = True
+def simple(event):
+    global aberto
+    if(aberto):
+        combo.focus()
+        aberto = not aberto
+    else:
+        listbox.focus()
+        aberto = not aberto
+root.bind("<F5>", simple)
+
+root.bind("<F12>", F12)
 
 root.mainloop()
