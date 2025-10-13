@@ -5,6 +5,8 @@ root = tk.Tk()
 root.title("Minha Aplicação Tkinter")
 root.geometry("800x650")
 root.resizable(False,False)
+bgimage = PhotoImage(file="ibagens/Design sem nome.png")
+tk.Label(root,image=bgimage, width=800, height=650).place(x=-2,y=-2)
 
 col1 = 350
 col2 = 600
@@ -87,17 +89,13 @@ def F1enter(valor):
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 7.90
     elif valor == "100":
-        nome = "Coca_Cola_350ML"
+        nome = "Coca350ML"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 6.50
     elif valor == "101":
-        nome = "Panelinhas_Seara"
+        nome = "Pan_Seara"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 18.90
-    elif valor == "999":
-        nome = "logi"
-        imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
-        valors = 9999999.90
     labelpreco.config(text=f"Preço Unitário: {valors}")
     labelitem.config(image=imagems)
     barrasqtde.focus()
@@ -217,21 +215,21 @@ descaixa = tk.Entry(root, textvariable=DesValor, width=12, font=("Arial", 20, ""
 Subcaixa.place(x=col1,y=(40 + (4.1 * 0)))
 descaixa.place(x=col2,y=(40 + (4.1 * 0)))
 
-label = tk.Label(root, text="Sub-Total").place(x=col1,y=(40 + (4.1 * 0)) - 25)
-label = tk.Label(root, text="Desconto").place(x=col2,y=(40 + (4.1 * 0)) - 25)
+label = tk.Label(root, text="Sub-Total", bg="white").place(x=col1,y=(40 + (4.1 * 0)) - 25)
+label = tk.Label(root, text="Desconto", bg="white").place(x=col2,y=(40 + (4.1 * 0)) - 25)
 
 #linha 2
 tocaixa = tk.Entry(root, textvariable=TotalValor, width=24, font=("Arial", 25, ""), state="disabled").place(x=col1,y=(40 * (4.1 * 1)) + 15)
-label = tk.Label(root, text="Total").place(x=col1,y=(40 * (4.1 * 1))- 10)
+label = tk.Label(root, text="Total", bg="white").place(x=col1,y=(40 * (4.1 * 1))- 10)
 
 #linha 3
 Resotao = tk.Entry(root, textvariable=ResValor, width=12, font=("Arial", 20, ""))
 Resotao.place(x=col1,y=(40 * (4.1 * 2)))
 Resotao.bind("<Return>", CalcularTroco)
-Trobotao = tk.Entry(root, textvariable=TroValor, width=12, font=("Arial", 20, ""), state="disabled").place(x=col2,y=(40 * (4.1 * 2)))
+Trobotao = tk.Entry(root, textvariable=TroValor, width=12, font=("Arial", 20, ""), state="disabled", bg="white").place(x=col2,y=(40 * (4.1 * 2)))
 
-label = tk.Label(root, text="Valor Recebido").place(x=col1,y=(40 * (4.1 * 2)) - 25)
-label = tk.Label(root, text="Troco").place(x=col2,y=(40 * (4.1 * 2))- 25)
+label = tk.Label(root, text="Valor Recebido", bg="white").place(x=col1,y=(40 * (4.1 * 2)) - 25)
+label = tk.Label(root, text="Troco", bg="white").place(x=col2,y=(40 * (4.1 * 2))- 25)
 
 #linha 4
 global opcoes
@@ -239,7 +237,7 @@ opcoes = ["Débito", "Crédito", "Dinheiro", "Voucher", "Pix"]
 combo = ttk.Combobox(root, values=opcoes, width=27, state="readonly")
 combo.place(x=col1,y=410)
 combo.bind("<<ComboboxSelected>>",mudapagamento)
-label = tk.Label(root, text="Formas de Pagamento").place(x=col1,y=385)
+label = tk.Label(root, text="Formas de Pagamento", bg="white").place(x=col1,y=385)
 
 #o famoso listbox
 global listbox
@@ -248,7 +246,12 @@ listbox.place(x=10,y=40)
 listbox.bind("<ButtonRelease-1>", selection)
 listbox.bind("<KeyRelease-Up>", selection)
 listbox.bind("<KeyRelease-Down>", selection)
-label = tk.Label(root, text="Lista de Produtos").place(x=110,y=10)
+label = tk.Label(root, text="Lista de Produtos", bg="white").place(x=110,y=0)
+iqua = 18
+label = tk.Label(root, text="Código", bg="white").place(x=15,y=iqua)
+label = tk.Label(root, text="Nome", bg="white").place(x=85,y=iqua)
+label = tk.Label(root, text="Quantidade", bg="white").place(x=155,y=iqua)
+label = tk.Label(root, text="Valor Unit.", bg="white").place(x=245,y=iqua)
 
 #imagem produto
 global imagem
@@ -264,34 +267,21 @@ imagemlogo = imagemlogo.subsample(3,3)
 label = tk.Label(root, image=imagemlogo, width=300, height=200).place(x=10,y=400)
 
 #codigo de barras
-label = tk.Label(root, text="Código de rabas").place(x=col1,y=450)
+label = tk.Label(root, text="Código de Barras", bg="white").place(x=col1,y=450)
 global labelbarras
-labelbarras = tk.Label(root, text="01100101010010110101011001")
+labelbarras = tk.Label(root, text="0", bg="white")
 labelbarras.place(x=col1,y=480)
 
-label = tk.Label(root, text="F1 - Novo Item").place(x=col2,y=500)
-label = tk.Label(root, text="F2 - Remover Item").place(x=col2,y=520)
-label = tk.Label(root, text="F3 - Consultar Preco").place(x=col2,y=540)
-label = tk.Label(root, text="F4 - Imprimir/Concluir Compra").place(x=col2,y=560)
-label = tk.Label(root, text="F5 - Alternar Pagamento/Produtos").place(x=col2,y=560)
-label = tk.Label(root, text="F12 - Nova Compra").place(x=col2,y=580)
+label = tk.Label(root, text="F1 - Novo Item", bg="white").place(x=col2,y=500)
+label = tk.Label(root, text="F2 - Remover Item", bg="white").place(x=col2,y=520)
+label = tk.Label(root, text="F3 - Consultar Preco", bg="white").place(x=col2,y=540)
+label = tk.Label(root, text="F4 - Imprimir/Concluir Compra", bg="white").place(x=col2,y=560)
+label = tk.Label(root, text="F12 - Nova Compra", bg="white").place(x=col2,y=560)
 
 root.bind("<F1>", F1)
 root.bind("<F2>", F2)
 root.bind("<F3>", F3)
 root.bind("<F4>", F4)
-global aberto
-aberto = True
-def simple(event):
-    global aberto
-    if(aberto):
-        combo.focus()
-        aberto = not aberto
-    else:
-        listbox.focus()
-        aberto = not aberto
-root.bind("<F5>", simple)
-
 root.bind("<F12>", F12)
 
 root.mainloop()
