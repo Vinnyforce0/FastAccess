@@ -3,7 +3,7 @@ from tkinter import PhotoImage, ttk
 
 root = tk.Tk()
 root.title("Minha Aplicação Tkinter")
-root.geometry("800x650")
+root.geometry("800x625")
 root.resizable(False,False)
 bgimage = PhotoImage(file="ibagens/Design sem nome.png")
 tk.Label(root,image=bgimage, width=800, height=650).place(x=-2,y=-2)
@@ -72,6 +72,7 @@ def F1enter(valor):
     valors = 0
     global imagems
     global nome
+
     if valor == "001":
         nome = "batata_kg"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
@@ -100,12 +101,27 @@ def F1enter(valor):
     labelitem.config(image=imagems)
     barrasqtde.focus()
 
+
+def temdesconto(quantia, nome, valor, event):
+    if(nome == "arroz_kg" and float(quantia) >= 2):
+        DesValor.set(round(float(DesValor.get()) + ((quantia*(valor/100)*6)), 2))
+    if(nome == "batata_kg" and float(quantia) >= 1.5):
+        DesValor.set(round(float(DesValor.get()) + ((quantia*(valor/100)*4)), 2))
+    if(nome == "feijao_kg" and float(quantia) >= 2):
+        DesValor.set(round(float(DesValor.get()) + ((quantia*(valor/100)*4)), 2))
+    if(nome == "Coca350ML" and float(quantia) >= 4):
+        DesValor.set(round(float(DesValor.get()) + ((quantia*(valor/100)*10)), 2))
+    if(nome == "Pan_Seara" and float(quantia) >= 3):
+        DesValor.set(round(float(DesValor.get()) + ((quantia*(valor/100)*24)), 2))
+    AtualizarPreco(event=event)
+
 def enviar(event):
     if(str(codigo.get()) != "" and str(qtde.get()) != ""):
         global F1foi
         listbox.insert(tk.END, f"{codigo.get()}                 {nome}                 {qtde.get()}                 {valors}")
         AtualizarPreco(event=event)
         F1foi = True
+        temdesconto(float(qtde.get()), nome, valors, event=event)
         janela_Item.destroy()
     
 def selection(event):
@@ -130,6 +146,7 @@ def F2(event):
     if(opa):
         listbox.delete(opa)
         AtualizarPreco(event=event)
+    DesValor.set("0.0")
 
 def AtualizarPreco(event):
     valores = 0
@@ -171,6 +188,7 @@ def F3(event):
         janela_Item.title("Consultar Produtos")
         janela_Item.geometry("450x300")
         janela_Item.resizable(False,False)
+        janela_Item.bind("<F3>", F3)
         tk.Label(janela_Item, text="Televisão       ").place(x=20,y=20)
         tk.Label(janela_Item, text="Batata          ").place(x=20,y=40)
         tk.Label(janela_Item, text="Arroz           ").place(x=20,y=60)
@@ -187,6 +205,35 @@ def F3(event):
     else:
         janela_Item.destroy()
         f3estado = not f3estado
+
+global f5estado
+f5estado = True
+
+def F5(event):
+    global f5estado
+    global janela_promo
+    if(f5estado):
+        janela_promo = tk.Toplevel(root)
+        janela_promo.title("Consultar Promoções")
+        janela_promo.geometry("550x300")
+        janela_promo.resizable(False,False)
+        janela_promo.bind("<F5>", F5)
+        tk.Label(janela_promo, text="Televisão       ").place(x=20,y=20)
+        tk.Label(janela_promo, text="Batata          ").place(x=20,y=40)
+        tk.Label(janela_promo, text="Arroz           ").place(x=20,y=60)
+        tk.Label(janela_promo, text="Feijão          ").place(x=20,y=80)
+        tk.Label(janela_promo, text="Coca_Cola_350ML ").place(x=20,y=100)
+        tk.Label(janela_promo, text="Panelinhas_Seara").place(x=20,y=120)
+        tk.Label(janela_promo, text="Não Possui").place(x=200,y=20)
+        tk.Label(janela_promo, text="Na compra de 1.5Kg ou mais  > 4% de desconto").place(x=200,y=40)
+        tk.Label(janela_promo, text="Na compra de 2 ou mais  > 6% de desconto").place(x=200,y=60)
+        tk.Label(janela_promo, text="Na compra de 2 ou mais  > 4% de desconto").place(x=200,y=80)
+        tk.Label(janela_promo, text="Na compra de 4 ou mais  > 10% de desconto").place(x=200,y=100)
+        tk.Label(janela_promo, text="Na compra de 3 ou mais  > 24% de desconto").place(x=200,y=120)
+        f5estado = not f5estado
+    else:
+        janela_promo.destroy()
+        f5estado = not f5estado
     
 def F4(event):
     janela_Result = tk.Toplevel(root)
@@ -276,12 +323,14 @@ label = tk.Label(root, text="F1 - Novo Item", bg="white").place(x=col2,y=500)
 label = tk.Label(root, text="F2 - Remover Item", bg="white").place(x=col2,y=520)
 label = tk.Label(root, text="F3 - Consultar Preco", bg="white").place(x=col2,y=540)
 label = tk.Label(root, text="F4 - Imprimir/Concluir Compra", bg="white").place(x=col2,y=560)
-label = tk.Label(root, text="F12 - Nova Compra", bg="white").place(x=col2,y=560)
+label = tk.Label(root, text="F5 - Promoções", bg="white").place(x=col2,y=580)
+label = tk.Label(root, text="F12 - Nova Compra", bg="white").place(x=col2,y=600)
 
 root.bind("<F1>", F1)
 root.bind("<F2>", F2)
 root.bind("<F3>", F3)
 root.bind("<F4>", F4)
+root.bind("<F5>", F5)
 root.bind("<F12>", F12)
 
 root.mainloop()
