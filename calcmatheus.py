@@ -77,29 +77,34 @@ def F1enter(valor):
         nome = "batata_kg"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 2.80
+        barrasqtde.focus()
     elif valor == "000":
         nome = "televisao"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 2559.90
+        barrasqtde.focus()
     elif valor == "010":
         nome = "arroz_kg"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 4.90
+        barrasqtde.focus()
     elif valor == "011":
         nome = "feijao_kg"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 7.90
+        barrasqtde.focus()
     elif valor == "100":
         nome = "Coca350ML"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 6.50
+        barrasqtde.focus()
     elif valor == "101":
         nome = "Pan_Seara"
         imagems = tk.PhotoImage(file=f"ibagens/{nome}.png").subsample(4,4)
         valors = 18.90
+        barrasqtde.focus()
     labelpreco.config(text=f"Preço Unitário: {valors}")
     labelitem.config(image=imagems)
-    barrasqtde.focus()
 
 
 def temdesconto(quantia, nome, valor, event):
@@ -118,11 +123,23 @@ def temdesconto(quantia, nome, valor, event):
 def enviar(event):
     if(str(codigo.get()) != "" and str(qtde.get()) != ""):
         global F1foi
-        listbox.insert(tk.END, f"{codigo.get()}                 {nome}                 {qtde.get()}                 {valors}")
+        atualizaprod(nome, event)
+        listbox.insert(tk.END, f"{codigo.get()}                 {nome}                 {float(qtde.get())}                 {valors}")
         AtualizarPreco(event=event)
         F1foi = True
         temdesconto(float(qtde.get()), nome, valors, event=event)
         janela_Item.destroy()
+
+def atualizaprod(nome, event):
+    i = 0
+    while(i < listbox.size()):
+        selec = str(listbox.get(i))
+        nah = selec.split("                 ")
+        if(nah[1] == nome):
+            listbox.delete(i, i)
+            qtde.set(float(qtde.get()) + float(nah[2]))
+        i+=1
+    AtualizarPreco(event=event)
     
 def selection(event):
     selec = listbox.curselection()
